@@ -1,5 +1,7 @@
 # NovelWriter
 
+[[日本語](README_ja.md)]
+
 NovelWriter is a local AI-assisted novel writing system using [Ollama](https://ollama.com/). It is designed to write long novels (70k-100k characters) by breaking down the process into Plot -> Outline -> Writing.
 
 ## Features
@@ -17,9 +19,9 @@ NovelWriter is a local AI-assisted novel writing system using [Ollama](https://o
 
 - **Python 3.8+**
 - **Ollama**: Installed and running.
-- **Ollama Model**: Pull your preferred model (default is `gemma2`).
+- **Ollama Model**: Pull your preferred model (default is `gpt-oss:120b`).
   ```bash
-  ollama pull gemma2
+  ollama pull gpt-oss:120b
   ```
 
 ## Installation

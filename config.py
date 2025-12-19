@@ -3,10 +3,10 @@ import os
 class Config:
     # Ollama Settings
     OLLAMA_BASE_URL = "http://localhost:11434"
-    DEFAULT_MODEL = "gemma2" # User can change this
+    DEFAULT_MODEL = "gpt-oss:120b" # User can change this
     
     # Project Paths
-    BASE_DIR = os.getcwd()
+    BASE_DIR = os.path.join(os.getcwd(), "writing")
     CHARACTERS_FILE = os.path.join(BASE_DIR, "characters.json")
     WORLD_FILE = os.path.join(BASE_DIR, "world.json")
     PLOT_FILE = os.path.join(BASE_DIR, "plot.md")
@@ -16,3 +16,4 @@ class Config:
 
     # Generation Settings
     MAX_CONTEXT_CHARS = 4000
+    NOVEL_VIEWPOINT = "三人称神視点" # "Third Person Omniscient"

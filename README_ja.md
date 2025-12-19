@@ -1,5 +1,7 @@
 # NovelWriter (日本語)
 
+[[English](README.md)]
+
 NovelWriterは、[Ollama](https://ollama.com/)を使用してローカル環境で動作するAI執筆支援システムです。長編小説（7万〜10万文字）の執筆を、プロット→構成案→執筆というプロセスに分解してサポートします。
 
 ## 特徴
@@ -17,9 +19,9 @@ NovelWriterは、[Ollama](https://ollama.com/)を使用してローカル環境�
 
 - **Python 3.8+**
 - **Ollama**: インストールされ、起動していること。
-- **Ollama モデル**: 使用するモデルをpullしてください（デフォルトは `gemma2`）。
+- **Ollama モデル**: 使用するモデルをpullしてください（デフォルトは `gpt-oss:120b`）。
   ```bash
-  ollama pull gemma2
+  ollama pull gpt-oss:120b
   ```
 
 ## インストール

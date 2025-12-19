@@ -66,6 +66,7 @@ def main():
         outline = state_manager.load_outline()
         characters = state_manager.load_characters()
         world = state_manager.load_world()
+        current_state = state_manager.load_state() or {}
         
         if not outline:
             print("Error: Outline not found. Run 'outline' first.")
@@ -100,10 +101,20 @@ def main():
                     return
 
                 print(f"Writing Chapter {chapter.get('chapter_title')}, Scene {scene_id}...")
-                scene_text = generator.write_scene(scene, previous_summary, characters, world)
+                scene_text = generator.write_scene(scene, previous_summary, characters, world, current_state)
                 
+                # Generate Title
+                print("Generating title...")
+                title = generator.generate_title(scene_text)
+                final_content = f"# {title}\n\n{scene_text}"
+
                 # Save scene
-                state_manager.save_text(scene_file, scene_text)
+                state_manager.save_text(scene_file, final_content)
+
+                # Update state based on the new scene
+                print(f"Updating state for Scene {scene_id}...")
+                current_state = generator.update_state(scene_text, current_state, characters)
+                state_manager.save_state(current_state)
                 
                 # Generate and save summary
                 print("Summarizing scene...")
