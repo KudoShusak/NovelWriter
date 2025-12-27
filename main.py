@@ -20,6 +20,10 @@ def main():
     parser_write = subparsers.add_parser("write", help="Write the next scene")
     parser_write.add_argument("--count", type=int, default=1, help="Number of scenes to write")
 
+    # Reconstruct Command
+    parser_reconstruct = subparsers.add_parser("reconstruct", help="Reconstruct state and summary after manual edit")
+    parser_reconstruct.add_argument("--scene", type=int, required=True, help="Target scene ID to reconstruct up to")
+
     args = parser.parse_args()
 
     generator = Generator()
@@ -115,6 +119,7 @@ def main():
                 print(f"Updating state for Scene {scene_id}...")
                 current_state = generator.update_state(scene_text, current_state, characters)
                 state_manager.save_state(current_state)
+                state_manager.save_state_snapshot(current_state, scene_id)
                 
                 # Generate and save summary
                 print("Summarizing scene...")
@@ -127,6 +132,30 @@ def main():
 
         if scenes_written == 0:
             print("All scenes in the outline appear to be written already.")
+
+    elif args.command == "reconstruct":
+        target_scene_id = args.scene
+        print(f"Reconstructing state up to Scene {target_scene_id}...")
+        
+        characters = state_manager.load_characters()
+        
+        # Reconstruct State
+        new_state = generator.reconstruct_state(target_scene_id, characters)
+        state_manager.save_state(new_state)
+        print("State reconstruction complete.")
+        
+        # Regenerate Summary for target scene
+        scene_file = os.path.join(Config.DRAFTS_DIR, f"scene_{target_scene_id}.md")
+        summary_file = os.path.join(Config.DRAFTS_DIR, f"scene_{target_scene_id}_summary.txt")
+        
+        if os.path.exists(scene_file):
+            print(f"Regenerating summary for Scene {target_scene_id}...")
+            scene_text = state_manager.load_text(scene_file)
+            summary = generator.summarize_scene(scene_text)
+            state_manager.save_text(summary_file, summary)
+            print("Summary regeneration complete.")
+        else:
+            print(f"Scene {target_scene_id} file not found. Skipping summary regeneration.")
 
     else:
         parser.print_help()

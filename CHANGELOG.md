@@ -2,6 +2,22 @@
 
 All notable changes to the NovelWriter project will be documented in this file.
 
+## v0.00.2 - 2025-12-28
+
+### Added (Manual Edit Support)
+- **Reconstruction Command**: Implemented `reconstruct` CLI command (`python main.py reconstruct --scene N`).
+    - Rebuilds `state.json` history from scene texts up to Scene N.
+    - Regenerates summary for Scene N based on current text.
+    - Useful for resuming consistent generation after manually editing scene files.
+- **State Snapshots**:
+    - Automatically saves `state_{n}.json` after writing or reconstructing each scene.
+    - Optimized reconstruction logic to load the latest available snapshot to speed up processing.
+
+### Added (Quality Improvements)
+- **Configurable Writing Style**:
+    - Added `NOVEL_STYLE` to `config.py` to define the overall tone (e.g., "Light Novel", "Literary").
+    - Updated writing prompts to respect the configured style.
+
 ## v0.00.1 - 2025-12-19
 
 ### Added (Quality Improvements)

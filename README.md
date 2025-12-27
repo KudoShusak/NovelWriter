@@ -52,6 +52,12 @@ Start writing the novel. You can specify how many scenes to write in one go.
 python main.py write --count 1
 ```
 
+### 4. Reconstruct State (Manual Edit Support)
+If you manually edited a scene file (e.g., `drafts/scene_2.md`), use this command to rebuild the internal consistency (`state.json`) up to that scene.
+```bash
+python main.py reconstruct --scene 2
+```
+
 ## Configuration
 
 Edit `config.py` to customize:

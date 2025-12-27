@@ -17,3 +17,4 @@ class Config:
     # Generation Settings
     MAX_CONTEXT_CHARS = 4000
     NOVEL_VIEWPOINT = "三人称神視点" # "Third Person Omniscient"
+    NOVEL_STYLE = "指定なし" # e.g. "ラノベ調", "純文学風"

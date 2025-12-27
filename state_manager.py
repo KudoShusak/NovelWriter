@@ -57,6 +57,17 @@ class StateManager:
     
     def save_state(self, state):
         self.save_json(Config.STATE_FILE, state)
-        
+
+    def save_state_snapshot(self, state, scene_id):
+        filename = f"state_{scene_id}.json"
+        self.save_json(os.path.join(Config.DRAFTS_DIR, filename), state)
+
+    def load_state_snapshot(self, scene_id):
+        filename = f"state_{scene_id}.json"
+        path = os.path.join(Config.DRAFTS_DIR, filename)
+        if os.path.exists(path):
+            return self.load_json(path)
+        return None
+
     def load_state(self):
         return self.load_json(Config.STATE_FILE)

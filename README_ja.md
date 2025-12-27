@@ -52,6 +52,12 @@ python main.py outline
 python main.py write --count 1
 ```
 
+### 4. 状態の再構築（手動修正の反映）
+シーンファイル（例: `drafts/scene_2.md`）を手動で書き換えた場合、このコマンドを使ってそのシーンまでの内部整合性（`state.json`）を再構築してください。
+```bash
+python main.py reconstruct --scene 2
+```
+
 ## 設定
 
 `config.py` を編集することで以下の設定を変更できます:

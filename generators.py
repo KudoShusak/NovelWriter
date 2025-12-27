@@ -1,5 +1,5 @@
 import json
-from llm_client import LLMClient
+import os
 from llm_client import LLMClient
 from state_manager import StateManager
 from config import Config
@@ -156,6 +156,7 @@ class Generator:
         物語調で、描写豊かに日本語で執筆してください。
         キャラクターの一人称、二人称、口調（セリフ例）の設定を厳守してください。ただし、セリフ例はあくまでも例です。実際に出力する際は、その場面に即したセリフにアレンジしてください。
         **視点設定**: {Config.NOVEL_VIEWPOINT} を厳守し、シーン内で不自然に視点を切り替えないでください。
+        **文体・スタイル**: {Config.NOVEL_STYLE}
         """
         print(f"Writing scene {scene_info.get('scene_id')}...")
         return self.client.generate_text(prompt)
@@ -222,6 +223,44 @@ class Generator:
         except json.JSONDecodeError:
             print("Failed to parse state update JSON.")
             return old_state
+
+    def reconstruct_state(self, target_scene_id, characters):
+        """
+        Reconstructs the state from Scene 1 up to target_scene_id.
+        Optimized to use existing snapshots if available.
+        """
+        print(f"Reconstructing state up to Scene {target_scene_id}...")
+        current_state = {}
+        start_index = 1
+        
+        # Check for existing snapshots to resume from
+        # Loop backwards from target_scene_id - 1 to 1
+        for i in range(target_scene_id - 1, 0, -1):
+            snapshot = self.state_manager.load_state_snapshot(i)
+            if snapshot:
+                print(f"Found snapshot for Scene {i}. Resuming from Scene {i+1}...")
+                current_state = snapshot
+                start_index = i + 1
+                break
+        
+        # Loop from start_index to target_scene_id
+        for i in range(start_index, target_scene_id + 1):
+            scene_file = os.path.join(Config.DRAFTS_DIR, f"scene_{i}.md")
+            if not os.path.exists(scene_file):
+                print(f"Scene {i} not found. Stopping reconstruction.")
+                break
+                
+            print(f"Processing Scene {i}...")
+            scene_text = self.state_manager.load_text(scene_file)
+            
+            # Update state with this scene's content
+            current_state = self.update_state(scene_text, current_state, characters)
+            
+            # Save snapshot
+            self.state_manager.save_state_snapshot(current_state, i)
+            
+        print("Reconstruction complete.")
+        return current_state
 
     def _clean_json_response(self, response):
         # Remove markdown code blocks if present
